@@ -7,6 +7,7 @@ from pid import *
 TARGET_DEPTH = 40.0
 SEC_TO_MOVE_FORWARD = 10
 
+dist_coeffs = np.zeros((5, 1), dtype=np.float32) 
 
 pid_surge = PIDController(kp=0.5, ki=0.0, kd=0.1)
 pid_yaw   = PIDController(kp=1.0, ki=0.0, kd=0.1)
@@ -61,7 +62,7 @@ def move_forward():
 
         # Update each PID and obtain control outputs
         #u_surge = pid_surge.update(e_surge, current_time)
-        u_surge = 50 
+        u_surge = 120
         u_yaw   = pid_yaw.update(e_yaw, current_time)
         u_heave = pid_heave.update(e_heave, current_time)
         u_pitch = pid_pitch.update(e_pitch, current_time)

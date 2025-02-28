@@ -3,6 +3,9 @@ import matplotlib.animation as animation
 import time
 from threading import Thread
 from pid import *
+from pnp import *
+from gate_detect import *
+
 
 TARGET_DEPTH = 40.0
 SEC_TO_MOVE_FORWARD = 10
@@ -28,7 +31,6 @@ def initialise_imu():
 TARGET_YAW = initialise_imu()
 
 
-def move_forward(): 
 def gate_search():
         # Get error signals
         #e_surge = get_surge_error()
@@ -214,7 +216,7 @@ def gate_search():
 
             # Update each PID and obtain control outputs
             #u_surge = pid_surge.update(e_surge, current_time)
-            u_surge = 50 
+            u_surge = 125 
             u_yaw   = pid_yaw.update(e_yaw, current_time)
             u_heave = pid_heave.update(e_heave, current_time)
             u_pitch = pid_pitch.update(e_pitch, current_time)
@@ -226,9 +228,7 @@ def gate_search():
             print(thruster_pwms)
             send_pwm(thruster_pwms)
             time.sleep(0.05)                                                                                                                                                       
-    
-    
-    
+
 
 # =======================
 # Sensor Error Functions (Stubs / Example)
@@ -457,7 +457,7 @@ finally:
         ctypes.pythonapi.PyThreadState_SetAsyncExc(
             ctypes.c_long(main_thread.ident), ctypes.py_object(SystemExit)
         )
-
+    cv2.destroyAllWindows()
     print("[INFO] Sending 1500 to all thrusters (neutral)...")
     send_pwm(([1500] * 5),flag = False)  # Ensure motors stop
     print("[INFO] Executed finally block. System shut down.")
