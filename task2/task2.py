@@ -223,6 +223,11 @@ def gate_search():
     #e_surge = get_surge_error()
     #e_yaw   = get_yaw_error(-30)
     while True:
+        tuple_points = get_gate_corners()
+
+        if tuple_points == np.array([(-1,-1),(-1,-1),(-1,-1),(-1,-1)], dtype=np.float32):
+
+
         while get_yaw_error(-30) != 0:
             current_time = time.time()
             e_heave = get_heave_error()
@@ -296,7 +301,7 @@ def gate_search():
                         print(thruster_pwms)
                         send_pwm(thruster_pwms)
                         time.sleep(0.05)
-            
+        
                     
                     return tuple_points
                     
@@ -404,7 +409,7 @@ def gate_search():
 
             # Update each PID and obtain control outputs
             #u_surge = pid_surge.update(e_surge, current_time)
-            u_surge = 50 
+            u_surge = 120
             u_yaw   = pid_yaw.update(e_yaw, current_time)
             u_heave = pid_heave.update(e_heave, current_time)
             u_pitch = pid_pitch.update(e_pitch, current_time)
