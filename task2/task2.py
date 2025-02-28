@@ -217,10 +217,11 @@ def initialize_thrusters():
     print("Initialized thrusters to neutral (1500).")
     time.sleep(2)
 
+
 def gate_search():
-        # Get error signals
-        #e_surge = get_surge_error()
-        #e_yaw   = get_yaw_error(-30)
+    # Get error signals
+    #e_surge = get_surge_error()
+    #e_yaw   = get_yaw_error(-30)
     while True:
         while get_yaw_error(-30) != 0:
             current_time = time.time()
@@ -243,8 +244,9 @@ def gate_search():
             
             # tuple = size[tuple_points]
             # flag = np.all(tuple_points == [-1, -1])
-            count_non_negative = np.sum(~np.all(tuple_points == [-1, -1], axis=1))#change to np.compare for better functionality
-
+        
+            tuple_points = get_gate_corners()
+            count_non_negative = np.sum(~np.all(tuple_points != [-1, -1], axis=1))
 
             match count_non_negative:
                 # case 0:

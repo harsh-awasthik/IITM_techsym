@@ -35,7 +35,7 @@ class PIDController:
     A generic PID controller class for one DOF.
     Now also stores the individual P, I, and D components for plotting.
     """
-    def _init_(self, kp, ki, kd, setpoint=0.0, output_limits=(None, None)):
+    def __init__(self, kp, ki, kd, setpoint=0.0, output_limits=(None, None)):
         self.kp = kp
         self.ki = ki
         self.kd = kd
