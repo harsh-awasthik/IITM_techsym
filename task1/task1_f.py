@@ -31,7 +31,7 @@ def initialise_imu():
     return current_yaw
 
 TARGET_YAW = initialise_imu()
-TARGET_DEPTH = 75
+TARGET_DEPTH = 20
 SEC_TO_MOVE_FORWARD = 10
 
 # Start background reading for IMU
