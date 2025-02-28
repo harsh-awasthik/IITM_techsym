@@ -29,51 +29,206 @@ TARGET_YAW = initialise_imu()
 
 
 def move_forward(): 
-    while get_yaw_error(TARGET_YAW) != 0:
-        print("----Correcting Yaw----")
-        current_time = time.time()
-        e_yaw = get_yaw_error()
-        e_heave = get_heave_error()
-        e_pitch = get_pitch_error()
+def gate_search():
+        # Get error signals
+        #e_surge = get_surge_error()
+        #e_yaw   = get_yaw_error(-30)
+    while True:
+        while get_yaw_error(-30) != 0:
+            e_heave = get_heave_error()
+            e_pitch = get_pitch_error()
 
-        # Update each PID and obtain control outputs
-        #u_surge = pid_surge.update(e_surge, current_time)
-        u_surge = 0
-        u_yaw   = pid_yaw.update(e_yaw, current_time)
-        u_heave = pid_heave.update(e_heave, current_time)
-        u_pitch = pid_pitch.update(e_pitch, current_time)
+            # Update each PID and obtain control outputs
+            u_surge = 0
+            u_yaw   = pid_yaw.update(e_yaw, current_time)
+            u_heave = pid_heave.update(e_heave, current_time)
+            u_pitch = pid_pitch.update(e_pitch, current_time)
+            
 
-        # Mix into thruster PWMs and send commands
-        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
-        print(thruster_pwms)
-        send_pwm(thruster_pwms)
-        time.sleep(0.05)
-
-    print("----Yaw is Oriented---")                
-
-    LT1 = time.time()
-
-    while time.time() < (LT1 + SEC_TO_MOVE_FORWARD):
-        print("----Moving Forward----")
-        e_heave = get_heave_error()
-        e_pitch = get_pitch_error()
-        e_yaw = get_yaw_error(TARGET_YAW)
-
-        # Update each PID and obtain control outputs
-        #u_surge = pid_surge.update(e_surge, current_time)
-        u_surge = 50 
-        u_yaw   = pid_yaw.update(e_yaw, current_time)
-        u_heave = pid_heave.update(e_heave, current_time)
-        u_pitch = pid_pitch.update(e_pitch, current_time)
+            # Mix into thruster PWMs and send commands
+            thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+            print(thruster_pwms)
+            send_pwm(thruster_pwms)
+            time.sleep(0.05)
+            
+            # tuple = size[tuple_points]
+            # flag = np.all(tuple_points == [-1, -1])
+            count_non_negative = np.sum(~np.all(tuple_points == [-1, -1], axis=1))#change to np.compare for better functionality
 
 
-        # Mix into thruster PWMs and send commands
-        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+            match count_non_negative:
+                # case 0:
+                    # continue
+                # case 1:
+                    # continue
+                case 2:
+                    while get_yaw_error(-60) != 0:
+                        e_heave = get_heave_error()
+                        e_pitch = get_pitch_error()
 
-        print(thruster_pwms)
-        send_pwm(thruster_pwms)
-        time.sleep(0.05)                                                                                                                                                       
+                        # Update each PID and obtain control outputs
+                        #u_surge = pid_surge.update(e_surge, current_time)
+                        u_surge = 0
+                        u_yaw   = pid_yaw.update(e_yaw, current_time)
+                        u_heave = pid_heave.update(e_heave, current_time)
+                        u_pitch = pid_pitch.update(e_pitch, current_time) 
 
+                        # Mix into thruster PWMs and send commands
+                        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+                        print(thruster_pwms)
+                        send_pwm(thruster_pwms)
+                        time.sleep(0.05)
+                        count_non_negative = np.sum(~np.all(tuple_points == [-1, -1], axis=1))
+
+                        if count_non_negative == 4:
+                            return tuple_points
+            
+                # case 3:
+                    # continue
+                case 4:
+                    #e_yaw   = get_yaw_error(-10)
+                    while get_yaw_error(-40) != 0:
+                        e_heave = get_heave_error()
+                        e_pitch = get_pitch_error()
+
+                        # Update each PID and obtain control outputs
+                        #u_surge = pid_surge.update(e_surge, current_time)
+                        u_surge = 0
+                        u_yaw   = pid_yaw.update(e_yaw, current_time)
+                        u_heave = pid_heave.update(e_heave, current_time)
+                        u_pitch = pid_pitch.update(e_pitch, current_time)
+            
+ 
+                        # Mix into thruster PWMs and send commands
+                        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+                        print(thruster_pwms)
+                        send_pwm(thruster_pwms)
+                        time.sleep(0.05)
+            
+                    
+                    return tuple_points
+                    
+
+        while get_yaw_error(30) != 0:
+            e_heave = get_heave_error()
+            e_pitch = get_pitch_error()
+
+            # Update each PID and obtain control outputs
+            #u_surge = pid_surge.update(e_surge, current_time)
+            u_surge = 0
+            u_yaw   = pid_yaw.update(e_yaw, current_time)
+            u_heave = pid_heave.update(e_heave, current_time)
+            u_pitch = pid_pitch.update(e_pitch, current_time)
+            
+
+            # Mix into thruster PWMs and send commands
+            thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+            print(thruster_pwms)
+            send_pwm(thruster_pwms)
+            time.sleep(0.05)
+            
+            # tuple = size(tuple_points)
+            count_non_negative = np.sum(~np.all(tuple_points == [-1, -1], axis=1))
+
+
+            match count_non_negative:
+                # case 0:
+                    # continue
+                # case 1:
+                    # continue
+                case 2:
+                    while get_yaw_error(60)!=0:
+                        e_heave = get_heave_error()
+                        e_pitch = get_pitch_error()
+
+                        # Update each PID and obtain control outputs
+                        #u_surge = pid_surge.update(e_surge, current_time)
+                        u_surge = 0
+                        u_yaw   = pid_yaw.update(e_yaw, current_time)
+                        u_heave = pid_heave.update(e_heave, current_time)
+                        u_pitch = pid_pitch.update(e_pitch, current_time)
+
+
+                        # Mix into thruster PWMs and send commands
+                        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+                        print(thruster_pwms)
+                        send_pwm(thruster_pwms)
+                        time.sleep(0.05)
+                        count_non_negative = np.sum(~np.all(tuple_points == [-1, -1], axis=1))
+
+                        if count_non_negative == 4:
+                            return tuple_points
+            
+                # case 3:
+                    # continue
+                case 4:
+                    #e_yaw   = get_yaw_error(-10)
+                    while get_yaw_error(40)!=0:
+                        e_heave = get_heave_error()
+                        e_pitch = get_pitch_error()
+
+                        # Update each PID and obtain control outputs
+                        #u_surge = pid_surge.update(e_surge, current_time)
+                        u_surge = 0
+                        u_yaw   = pid_yaw.update(e_yaw, current_time)
+                        u_heave = pid_heave.update(e_heave, current_time)
+                        u_pitch = pid_pitch.update(e_pitch, current_time)
+            
+
+                        # Mix into thruster PWMs and send commands
+                        thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+                        print(thruster_pwms)
+                        send_pwm(thruster_pwms)
+                        time.sleep(0.05)
+            
+                    
+                    return tuple_points
+
+            
+        while get_yaw_error(0) != 0:
+            current_time = time.time()
+            e_heave = get_heave_error()
+            e_pitch = get_pitch_error()
+            e_yaw = get_yaw_error(TARGET_YAW)
+
+            # Update each PID and obtain control outputs
+            #u_surge = pid_surge.update(e_surge, current_time)
+            u_surge = 0
+            u_yaw   = pid_yaw.update(e_yaw, current_time)
+            u_heave = pid_heave.update(e_heave, current_time)
+            u_pitch = pid_pitch.update(e_pitch, current_time)
+
+
+            # Mix into thruster PWMs and send commands
+            thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+            print(thruster_pwms)
+            send_pwm(thruster_pwms)
+            time.sleep(0.05)
+                    
+            
+        LT1 = time.time()
+
+        while time.time() < (LT1 + 2):
+            e_heave = get_heave_error()
+            e_pitch = get_pitch_error()
+
+            # Update each PID and obtain control outputs
+            #u_surge = pid_surge.update(e_surge, current_time)
+            u_surge = 50 
+            u_yaw   = pid_yaw.update(e_yaw, current_time)
+            u_heave = pid_heave.update(e_heave, current_time)
+            u_pitch = pid_pitch.update(e_pitch, current_time)
+
+
+            # Mix into thruster PWMs and send commands
+            thruster_pwms = mix_outputs(u_surge, u_yaw, u_heave, u_pitch)
+
+            print(thruster_pwms)
+            send_pwm(thruster_pwms)
+            time.sleep(0.05)                                                                                                                                                       
+    
+    
+    
 
 # =======================
 # Sensor Error Functions (Stubs / Example)
