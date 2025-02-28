@@ -144,8 +144,8 @@ beta_heave   = 1.0
 gamma_pitch  = 1.0
 
 PWM_NEUTRAL  = 1500
-PWM_MIN      = 1100
-PWM_MAX      = 1900
+PWM_MIN      = 1200
+PWM_MAX      = 1800
 
 def map_pwm_value(value):
     """
